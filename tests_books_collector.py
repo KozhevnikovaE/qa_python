@@ -146,3 +146,21 @@ class TestBooksCollector:
         assert result is None
         assert len(collector.favorites) == expected_favorites_count
         assert (book_name in collector.favorites) == expected_in_favorites
+
+
+    @pytest.mark.parametrize("initial_favorites, book_to_delete, expected_favorites", [
+        (["Война и мир", "Мастер и Маргарита"], "Война и мир", ["Мастер и Маргарита"]),
+        (["1984"], "1984", []),
+        (["Гарри Поттер", "Маленький принц"], "Властелин колец", ["Гарри Поттер", "Маленький принц"]),
+        ([], "Война и мир", []),    
+        (["Книга 1", "Книга 2"], None, ["Книга 1", "Книга 2"]),
+        (["Книга 1", "Книга 2"], "", ["Книга 1", "Книга 2"]),
+    ],)
+
+    def test_delete_book_from_favorites(self, collector, initial_favorites, book_to_delete, expected_favorites):
+
+        collector.favorites = initial_favorites.copy()
+
+        result = collector.delete_book_from_favorites(book_to_delete)
+
+        assert collector.favorites == expected_favorites
