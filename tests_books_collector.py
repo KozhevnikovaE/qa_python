@@ -13,6 +13,7 @@ class TestBooksCollector:
     ])
     def test_add_new_book_multiple_books(self, book_names, expected_count):
         collector = BooksCollector()
+
         for book in book_names:
             collector.add_new_book(book)
 
@@ -47,3 +48,25 @@ class TestBooksCollector:
         result = collector.get_books_for_children()
 
         assert result == expected_children_books
+
+
+    @pytest.fixture
+    def collector(self):
+        return BooksCollector()
+    
+    @pytest.mark.parametrize("book_name,genre,expected_genre", [
+        ('1984', 'Фантастика', 'Фантастика'),
+        ('Война и мир', 'Ужасы', 'Ужасы'),
+        ('Гарри Поттер', 'Детективы', 'Детективы'),
+        ('Том и Джерри', 'Мультфильмы', 'Мультфильмы'),
+        ('Один дома', 'Комедии', 'Комедии'),
+    ])
+    def test_add_genre_to_existing_book_with_empty_genre(self, collector, book_name, genre, expected_genre):
+    
+        collector.add_new_book(book_name)
+
+        collector.set_book_genre(book_name, genre)
+
+        assert collector.books_genre[book_name] == expected_genre
+
+
