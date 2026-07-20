@@ -32,17 +32,17 @@ class TestBooksCollector:
 
 
     @pytest.mark.parametrize("books_data, expected_children_books", [
-        ({'Книга 1': 'Фантастика', 'Книга 2': 'Мультфильмы'}, ['Книга 1', 'Книга 2']),
+        ({'Книга 1': 'Фантастика', 'Книга 2': 'Мультфильмы'}, ['Книга 1','Книга 2']),
         ({'Книга ужасов': 'Ужасы', 'Детектив': 'Детективы'},[]),
-        ({'Мультфильм': 'Мультфильмы',
-           'Ужастик': 'Ужасы',
-           'Комедия': 'Комедии',
-           'Детектив': 'Детективы'},['Мультфильм', 'Комедия']),
+        ({'Мадагаскар': 'Мультфильмы',
+           'Оно': 'Ужасы',
+           'Муви43': 'Комедии',
+           'Шерлок Холмс': 'Детективы'},['Мадагаскар', 'Муви43']),
         ({},[]),
-        ({'Научная книга': 'Наука', 'Историческая': 'История'},[]),
-        ({'Мультфильм': 'Мультфильмы',
-          'Ужастик': 'Ужасы',
-          'Учебник': 'Наука'},['Мультфильм'])
+        ({'Научная книга': 'Детективы', 'История игрушек': 'Мультфильмы'},['История игрушек']),
+        ({'Мультфильмы': 'Мультфильмы',
+          'Оно': 'Ужасы',
+          'Ученик': 'Детективы'},['Мультфильмы'])
     ])
     def test_get_books_for_children(self, books_data, expected_children_books):
         collector = BooksCollector()
@@ -121,3 +121,28 @@ class TestBooksCollector:
         assert result == expected_result
         assert len(result) == len(expected_result)
 
+
+
+    @pytest.mark.parametrize("book_name, books_in_collection, is_in_favorites_before, expected_in_favorites, expected_favorites_count", [
+        ("Война и мир", {"Война и мир": "Ужасы"}, False, True, 1),
+        ("Мастер и Маргарита", {"Мастер и Маргарита": "Фантастика"}, True, True, 1),
+        ("1984", {}, False, False, 0),
+        ("Гарри Поттер", {"Маленький принц": "Мультфильмы"}, False, False, 0),
+        ("", {}, False, False, 0),
+        (None, {"Война и мир": "Ужасы"}, False, False, 0),
+    ])
+    def test_add_book_in_favorites(self, collector, book_name, books_in_collection, is_in_favorites_before, expected_in_favorites, expected_favorites_count):
+
+        collector.books_genre = books_in_collection.copy()
+
+        collector.favorites = (
+            [book_name] 
+            if is_in_favorites_before and book_name 
+            else []
+        )
+
+        result = collector.add_book_in_favorites(book_name)
+
+        assert result is None
+        assert len(collector.favorites) == expected_favorites_count
+        assert (book_name in collector.favorites) == expected_in_favorites
