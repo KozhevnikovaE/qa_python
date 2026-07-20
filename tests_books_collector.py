@@ -2,6 +2,11 @@ import pytest
 
 from main import BooksCollector
 
+@pytest.fixture
+def collector():
+    return BooksCollector()
+    
+
 class TestBooksCollector:
 
     @pytest.mark.parametrize("book_names, expected_count", [
@@ -50,9 +55,7 @@ class TestBooksCollector:
         assert result == expected_children_books
 
 
-    @pytest.fixture
-    def collector(self):
-        return BooksCollector()
+    
     
     @pytest.mark.parametrize("book_name,genre,expected_genre", [
         ('1984', 'Фантастика', 'Фантастика'),
@@ -70,3 +73,17 @@ class TestBooksCollector:
         assert collector.books_genre[book_name] == expected_genre
 
 
+    @pytest.mark.parametrize("book_title, expected_genre", [
+    ("Мастер и Маргарита", "Фантастика"),
+    ("Гарри Поттер и философский камень", "Комедии"),
+    ("Преступление и наказание", "Ужасы"),
+    ("Маленький принц", "Мультфильмы"),
+    ("Шерлок Холмс", "Детективы")
+    ])
+    def test_get_genre_by_book_title(self, collector, book_title, expected_genre):
+        
+        collector.add_new_book(book_title)
+        collector.set_book_genre(book_title, expected_genre)
+        
+        assert book_title in collector.books_genre
+        assert collector.books_genre[book_title] == expected_genre
