@@ -164,3 +164,18 @@ class TestBooksCollector:
         result = collector.delete_book_from_favorites(book_to_delete)
 
         assert collector.favorites == expected_favorites
+
+
+    @pytest.mark.parametrize("books_in_favorites, expected_result",
+     [([], []), 
+     (["Книга 1"], ["Книга 1"]),
+     (["Книга А", "Книга Б", "Книга В"], ["Книга А", "Книга Б", "Книга В"]),
+     ])
+    def test_get_list_of_favorites_books_parametrized(self, books_in_favorites, expected_result):
+        collector = BooksCollector()
+
+        collector.favorites = books_in_favorites
+
+        result = collector.get_list_of_favorites_books()
+
+        assert result == expected_result 
