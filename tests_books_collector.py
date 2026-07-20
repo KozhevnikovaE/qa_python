@@ -87,3 +87,37 @@ class TestBooksCollector:
         
         assert book_title in collector.books_genre
         assert collector.books_genre[book_title] == expected_genre
+
+
+    @pytest.mark.parametrize("test_books, expected_result", [
+        ({}, {}),                                                                            
+        ({"Война и мир": ""}, {"Война и мир": ""}),                                          
+        ({"Мастер и Маргарита": "Фантастика"}, {"Мастер и Маргарита": "Фантастика"}),        
+        ({"Гарри Поттер": "Фантастика",                                                      
+          "1984": "Ужасы",
+          "Маленький принц": "Мультфильмы"
+         },
+         {"Гарри Поттер": "Фантастика",
+          "1984": "Ужасы",
+          "Маленький принц": "Мультфильмы"
+         }),
+
+        ({"Война и мир": "",                                                                                                                               
+          "Преступление и наказание": "",
+          "Анна Каренина": ""
+         },
+         {"Война и мир": "",
+          "Преступление и наказание": "",
+          "Анна Каренина": ""
+         }),
+
+    ])
+    def test_get_books_genre(self, collector, test_books, expected_result):
+        collector.books_genre = test_books
+
+        result = collector.get_books_genre()
+
+        assert isinstance(result, dict)
+        assert result == expected_result
+        assert len(result) == len(expected_result)
+
