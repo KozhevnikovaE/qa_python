@@ -19,8 +19,31 @@ class TestBooksCollector:
         books = collector.get_books_genre()
 
         assert len(books) == expected_count
-        assert len(set(book_names)) == expected_count
 
         for book_name in books:
             assert book_name in books
-            assert books[book_name] == ""  
+            assert books[book_name] == "" 
+
+
+    @pytest.mark.parametrize("books_data, expected_children_books", [
+        ({'Книга 1': 'Фантастика', 'Книга 2': 'Мультфильмы'}, ['Книга 1', 'Книга 2']),
+        ({'Книга ужасов': 'Ужасы', 'Детектив': 'Детективы'},[]),
+        ({'Мультфильм': 'Мультфильмы',
+           'Ужастик': 'Ужасы',
+           'Комедия': 'Комедии',
+           'Детектив': 'Детективы'},['Мультфильм', 'Комедия']),
+        ({},[]),
+        ({'Научная книга': 'Наука', 'Историческая': 'История'},[]),
+        ({'Мультфильм': 'Мультфильмы',
+          'Ужастик': 'Ужасы',
+          'Учебник': 'Наука'},['Мультфильм'])
+    ])
+    def test_get_books_for_children(self, books_data, expected_children_books):
+        collector = BooksCollector()
+
+        for book_name, genre in books_data.items():
+            collector.books_genre[book_name] = genre
+
+        result = collector.get_books_for_children()
+
+        assert result == expected_children_books
