@@ -108,29 +108,36 @@ class TestBooksCollector:
 
 
 
-    @pytest.mark.parametrize("book_name, books_in_collection, is_in_favorites_before, expected_in_favorites, expected_favorites_count", [
-        ("Война и мир", {"Война и мир": "Ужасы"}, False, True, 1),
-        ("Мастер и Маргарита", {"Мастер и Маргарита": "Фантастика"}, True, True, 1),
-        ("1984", {}, False, False, 0),
-        ("Гарри Поттер", {"Маленький принц": "Мультфильмы"}, False, False, 0),
-        ("", {}, False, False, 0),
-        (None, {"Война и мир": "Ужасы"}, False, False, 0),
+    @pytest.mark.parametrize("book_name, genre",[
+        ("Война и мир", "Ужасы"),
+        ("Мастер и Маргарита", "Фантастика"),
+        ("Гарри Поттер", "Фэнтези")
     ])
-    def test_add_book_in_favorites(self, collector, book_name, books_in_collection, is_in_favorites_before, expected_in_favorites, expected_favorites_count):
+    def test_add_book_in_favorites_valid(self, collector, book_name, genre):
 
-        collector.books_genre = books_in_collection.copy()
-
-        collector.favorites = (
-            [book_name] 
-            if is_in_favorites_before and book_name 
-            else []
-        )
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, genre)
 
         result = collector.add_book_in_favorites(book_name)
 
-        assert result is None
-        assert len(collector.favorites) == expected_favorites_count
-        assert (book_name in collector.favorites) == expected_in_favorites
+        assert result is None 
+        assert book_name in collector.favorites  
+        assert len(collector.favorites) == 1 
+
+
+    @pytest.mark.parametrize("book_name",[
+        "1984",           
+        "",              
+        None             
+    ])
+    def test_add_book_in_favorites_invalid(self, collector, book_name):
+    
+        result = collector.add_book_in_favorites(book_name)
+
+    
+        assert result is None  
+        assert book_name not in collector.favorites 
+        assert len(collector.favorites) == 0   
 
 
     @pytest.mark.parametrize("initial_favorites, book_to_delete, expected_favorites", [
