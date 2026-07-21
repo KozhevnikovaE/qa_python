@@ -1,20 +1,17 @@
 import pytest
-
 from main import BooksCollector
-
-@pytest.fixture
-def collector():
-    return BooksCollector()
-    
+ 
 
 class TestBooksCollector:
 
     @pytest.mark.parametrize("book_names, expected_count", [
-        (['Гордость и предубеждение и зомби', 'Что делать, если ваш кот хочет вас убить'], 2),
         (['Война и мир'], 1),
+        (['Гордость и предубеждение и зомби', 'Что делать, если ваш кот хочет вас убить'], 2),
         ([], 0),
         (['1984', '1984'], 1),
-        (['Мастер и Маргарита', 'Мастер и Маргарита', 'Преступление и наказание'], 2)
+        (['А'], 1),
+        (['Очень длинное название книги, которое превышает обычные пределы и может вызвать проблемы'], 0),
+        
     ])
     def test_add_new_book_multiple_books(self, book_names, expected_count):
         collector = BooksCollector()
