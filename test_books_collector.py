@@ -97,7 +97,7 @@ class TestBooksCollector:
         ({"Гарри Поттер": "Фэнтези", "Анна Каренина": ""},
          {"Гарри Поттер": "Фэнтези", "Анна Каренина": ""})
          ])
-    def test_get_books_genre(self, collector, test_books, expected_result):
+    def test_get_books_genre(self, collector, test_books, expected_result):                       
         collector.books_genre = test_books
 
         result = collector.get_books_genre()
@@ -113,7 +113,7 @@ class TestBooksCollector:
         ("Мастер и Маргарита", "Фантастика"),
         ("Гарри Поттер", "Фэнтези")
     ])
-    def test_add_book_in_favorites_valid(self, collector, book_name, genre):
+    def test_add_book_in_favorites_valid(self, collector, book_name, genre):                      
 
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
@@ -130,7 +130,7 @@ class TestBooksCollector:
         "",              
         None             
     ])
-    def test_add_book_in_favorites_invalid(self, collector, book_name):
+    def test_add_book_in_favorites_invalid(self, collector, book_name):                            
     
         result = collector.add_book_in_favorites(book_name)
 
@@ -140,7 +140,7 @@ class TestBooksCollector:
         assert len(collector.favorites) == 0   
 
 
-    def test_delete_book_from_favorites_simple(self, collector):
+    def test_delete_book_from_favorites_simple(self, collector):                                   
     
         collector.favorites = ["Война и мир", "Мастер и Маргарита"]
 
@@ -154,11 +154,11 @@ class TestBooksCollector:
      (["Книга 1"], ["Книга 1"]),
      (["Книга А", "Книга Б", "Книга В"], ["Книга А", "Книга Б", "Книга В"]),
      ])
-    def test_get_list_of_favorites_books_parametrized(self, books_in_favorites, expected_result):
+    def test_get_list_of_favorites_books_parametrized(self, books_in_favorites, expected_result):   
         collector = BooksCollector()
 
         collector.favorites = books_in_favorites
 
         result = collector.get_list_of_favorites_books()
 
-        assert result == expected_result 
+        assert result == expected_result  
