@@ -48,20 +48,27 @@ class TestBooksCollector:
 
     
     
-    @pytest.mark.parametrize("book_name,genre,expected_genre", [
-        ('1984', 'Фантастика', 'Фантастика'),
-        ('Война и мир', 'Ужасы', 'Ужасы'),
-        ('Гарри Поттер', 'Детективы', 'Детективы'),
-        ('Том и Джерри', 'Мультфильмы', 'Мультфильмы'),
-        ('Один дома', 'Комедии', 'Комедии'),
+    @pytest.mark.parametrize("book_name, genre, expected_genre",[
+        ('А', 'Фантастика', 'Фантастика'),
+
+        ('A' * 40, 'Ужасы', 'Ужасы'),
+        ('Гарри Поттер', 'Детективы', 'Детективы')
     ])
-    def test_add_genre_to_existing_book_with_empty_genre(self, collector, book_name, genre, expected_genre):
     
+    def test_add_genre_to_valid_book_name(self, collector, book_name, genre, expected_genre):
         collector.add_new_book(book_name)
-
         collector.set_book_genre(book_name, genre)
+        assert collector.books_genre[book_name] == expected_genre 
 
-        assert collector.books_genre[book_name] == expected_genre
+
+    @pytest.mark.parametrize("invalid_book_name",[           
+        '',            
+        'A' * 41 
+    ])
+    def test_add_invalid_book_name(self, collector, invalid_book_name):
+        collector.add_new_book(invalid_book_name)
+   
+        assert invalid_book_name not in collector.books_genre   
 
 
     @pytest.mark.parametrize("book_title, expected_genre", [
