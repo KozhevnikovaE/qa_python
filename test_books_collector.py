@@ -78,38 +78,25 @@ class TestBooksCollector:
     ("Маленький принц", "Мультфильмы"),
     ("Шерлок Холмс", "Детективы")
     ])
-    def test_get_genre_by_book_title(self, collector, book_title, expected_genre):
+    def test_get_genre_by_book_title(self, collector, book_title, expected_genre): # Проверка метода get_book_genre - получаем жанр книги по её имени 
         
         collector.add_new_book(book_title)
         collector.set_book_genre(book_title, expected_genre)
+
+        result = collector.get_book_genre(book_title)
         
-        assert book_title in collector.books_genre
-        assert collector.books_genre[book_title] == expected_genre
+        assert result == expected_genre 
 
 
     @pytest.mark.parametrize("test_books, expected_result", [
         ({}, {}),                                                                            
-        ({"Война и мир": ""}, {"Война и мир": ""}),                                          
-        ({"Мастер и Маргарита": "Фантастика"}, {"Мастер и Маргарита": "Фантастика"}),        
-        ({"Гарри Поттер": "Фантастика",                                                      
-          "1984": "Ужасы",
-          "Маленький принц": "Мультфильмы"
-         },
-         {"Гарри Поттер": "Фантастика",
-          "1984": "Ужасы",
-          "Маленький принц": "Мультфильмы"
-         }),
-
-        ({"Война и мир": "",                                                                                                                               
-          "Преступление и наказание": "",
-          "Анна Каренина": ""
-         },
-         {"Война и мир": "",
-          "Преступление и наказание": "",
-          "Анна Каренина": ""
-         }),
-
-    ])
+        ({"Война и мир": "", "Преступление и наказание": ""},
+         {"Война и мир": "", "Преступление и наказание": ""}),                                          
+        ({"Мастер и Маргарита": "Фантастика", "1984": "Ужасы"},
+         {"Мастер и Маргарита": "Фантастика", "1984": "Ужасы"}),        
+        ({"Гарри Поттер": "Фэнтези", "Анна Каренина": ""},
+         {"Гарри Поттер": "Фэнтези", "Анна Каренина": ""})
+         ])
     def test_get_books_genre(self, collector, test_books, expected_result):
         collector.books_genre = test_books
 
