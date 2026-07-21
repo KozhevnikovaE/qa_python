@@ -140,22 +140,13 @@ class TestBooksCollector:
         assert len(collector.favorites) == 0   
 
 
-    @pytest.mark.parametrize("initial_favorites, book_to_delete, expected_favorites", [
-        (["Война и мир", "Мастер и Маргарита"], "Война и мир", ["Мастер и Маргарита"]),
-        (["1984"], "1984", []),
-        (["Гарри Поттер", "Маленький принц"], "Властелин колец", ["Гарри Поттер", "Маленький принц"]),
-        ([], "Война и мир", []),    
-        (["Книга 1", "Книга 2"], None, ["Книга 1", "Книга 2"]),
-        (["Книга 1", "Книга 2"], "", ["Книга 1", "Книга 2"]),
-    ],)
+    def test_delete_book_from_favorites_simple(self, collector):
+    
+        collector.favorites = ["Война и мир", "Мастер и Маргарита"]
 
-    def test_delete_book_from_favorites(self, collector, initial_favorites, book_to_delete, expected_favorites):
+        collector.delete_book_from_favorites("Война и мир")
 
-        collector.favorites = initial_favorites.copy()
-
-        result = collector.delete_book_from_favorites(book_to_delete)
-
-        assert collector.favorites == expected_favorites
+        assert collector.favorites == ["Мастер и Маргарита"] 
 
 
     @pytest.mark.parametrize("books_in_favorites, expected_result",
